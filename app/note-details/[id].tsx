@@ -1,11 +1,11 @@
 // app/note-details/[id].tsx
-import { View, Text, TextInput, TouchableOpacity, Keyboard } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useNotes } from "../../hooks/useNotes";
-import { useEffect, useState } from "react";
-import { COLORS } from "../../constants/colors";
 import { Feather } from "@expo/vector-icons";
 import { format } from "date-fns";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { Keyboard, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { COLORS } from "../../constants/colors";
+import { useNotes } from "../../hooks/useNotes";
 
 export default function NoteDetailsScreen() {
   const { id } = useLocalSearchParams();
@@ -17,6 +17,7 @@ export default function NoteDetailsScreen() {
   const [isEditing, setIsEditing] = useState(false);
 
   const note = notes.find((n) => n.id === id);
+  const justDeleted = useRef(false);
 
   useEffect(() => {
     if (note) {
@@ -35,10 +36,16 @@ export default function NoteDetailsScreen() {
 
   const handleDelete = () => {
     if (note) {
-      deleteNote(note.id);
-      router.back();
+      deleteNote(note.id, () => {
+        justDeleted.current = true;
+        router.back();
+      });
     }
   };
+
+  if (justDeleted.current) {
+    return null;
+  }
 
   if (!note) {
     return (

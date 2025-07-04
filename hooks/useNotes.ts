@@ -1,7 +1,7 @@
 // app/hooks/useNotes.ts
-import { useState, useEffect } from "react";
-import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { Alert } from "react-native";
 import { Note } from "../types/note";
 
 const NOTES_KEY = "NOTES_APP_NOTES";
@@ -66,7 +66,7 @@ export const useNotes = () => {
     );
   };
 
-  const deleteNote = async (id: string) => {
+  const deleteNote = async (id: string, onDeleted?: () => void) => {
     Alert.alert(
       "Delete Note",
       "Are you sure you want to delete this note?",
@@ -80,10 +80,24 @@ export const useNotes = () => {
           style: "destructive",
           onPress: () => {
             setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+            if (onDeleted) onDeleted();
           },
         },
       ]
     );
+  };
+
+  const reloadNotes = async () => {
+    try {
+      const storedNotes = await AsyncStorage.getItem(NOTES_KEY);
+      if (storedNotes) {
+        setNotes(JSON.parse(storedNotes));
+      } else {
+        setNotes([]);
+      }
+    } catch (error) {
+      console.error("Failed to reload notes", error);
+    }
   };
 
   return {
@@ -92,5 +106,6 @@ export const useNotes = () => {
     addNote,
     updateNote,
     deleteNote,
+    reloadNotes,
   };
 };

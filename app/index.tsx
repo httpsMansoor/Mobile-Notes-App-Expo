@@ -1,15 +1,21 @@
 // app/index.tsx
-import { View, ScrollView, Text, TouchableOpacity } from "react-native";
-import { Link } from "expo-router";
-import { useNotes } from "../hooks/useNotes";
-import { NoteCard } from "../components/NoteCard";
-import { EmptyNotes } from "../components/EmptyNotes";
-import { COLORS } from "../constants/colors";
 import { Feather } from "@expo/vector-icons";
-import { ActivityIndicator } from "react-native";
+import { Link, useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native";
+import { EmptyNotes } from "../components/EmptyNotes";
+import { NoteCard } from "../components/NoteCard";
+import { COLORS } from "../constants/colors";
+import { useNotes } from "../hooks/useNotes";
 
 export default function HomeScreen() {
-  const { notes, isLoading } = useNotes();
+  const { notes, isLoading, reloadNotes } = useNotes();
+
+  useFocusEffect(
+    useCallback(() => {
+      reloadNotes();
+    }, [])
+  );
 
   if (isLoading) {
     return (
@@ -34,7 +40,7 @@ export default function HomeScreen() {
       )}
 
 // In your components where you link to the add note screen:
-<Link href="./add-note" asChild>
+    <Link href="./add-note" asChild>
         <TouchableOpacity className="absolute bottom-6 right-6 bg-indigo-500 w-14 h-14 rounded-full items-center justify-center shadow-lg">
           <Feather name="plus" size={24} color="white" />
         </TouchableOpacity>
