@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "new-app",
+    "name": "My Notes",
     "slug": "new-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.mansoor1004.newapp"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7cc767a9-7577-4451-8c02-c79f20f677ba"
+      }
     }
   }
 }

@@ -31,6 +31,7 @@ export default function NoteDetailsScreen() {
       await updateNote(note.id, title, content);
       setIsEditing(false);
       Keyboard.dismiss();
+      router.back();
     }
   };
 
